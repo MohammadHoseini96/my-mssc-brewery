@@ -3,14 +3,21 @@ package kian.springframework.mymsscbrewery.web.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Positive;
 import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 public class BeerDto {
+    @Null
     private UUID id;
+    @NotBlank
     private String beerName;
+    @NotBlank
     private String beerStyle;
+    @Positive
     private Long upc;
 
     public static BeerDtoBuilder builder() {

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RequestMapping("api/v1/customer")
@@ -25,7 +26,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    ResponseEntity<CustomerDto> handlePost(@RequestBody CustomerDto customerDto) {
+    ResponseEntity<CustomerDto> handlePost(@RequestBody @Valid CustomerDto customerDto) {
         CustomerDto savedCustomerDto = customerService.saveNewCustomer(customerDto);
 
         HttpHeaders headers = new HttpHeaders();
@@ -35,7 +36,7 @@ public class CustomerController {
 
     @PutMapping({"/{customerId}"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void handleUpdate(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDto customerDto) {
+    public void handleUpdate(@PathVariable("customerId") UUID customerId, @RequestBody @Valid CustomerDto customerDto) {
         customerService.updateCustomer(customerDto);
     }
 
@@ -44,5 +45,18 @@ public class CustomerController {
     public void handleDelete(@PathVariable("customerId") UUID customerId) {
         customerService.deleteById(customerId);
     }
+
+    // One way of returning customized errors to clients is this.
+    // I comment this out so we can use @ControllerAdvise in MvcExceptionHandler class
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<List<String>> handleViolationError(ConstraintViolationException ex) {
+//        List<String> errors = new ArrayList<>();
+//
+//        ex.getConstraintViolations().forEach(constraintViolation -> {
+//            errors.add(constraintViolation.getPropertyPath() + " : " + constraintViolation.getMessage());
+//        });
+//
+//        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+//    }
 
 }
