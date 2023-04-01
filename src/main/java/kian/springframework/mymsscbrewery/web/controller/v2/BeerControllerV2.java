@@ -2,6 +2,9 @@ package kian.springframework.mymsscbrewery.web.controller.v2;
 
 import kian.springframework.mymsscbrewery.services.v2.BeerServiceV2;
 import kian.springframework.mymsscbrewery.web.model.v2.BeerDtoV2;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +13,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/api/v2/beer")
+@RestController
 public class BeerControllerV2 {
     private final BeerServiceV2 beerService;
 
-    public BeerControllerV2(BeerServiceV2 beerService) {
-        this.beerService = beerService;
-    }
+    // We can use project lombok's requiredArgsConstructor and it will create the below constructor for us
+//    public BeerControllerV2(BeerServiceV2 beerService) {
+//        this.beerService = beerService;
+//    }
 
     @GetMapping({"/{beerId}"})
     public ResponseEntity<BeerDtoV2> getBeer(@PathVariable("beerId") UUID beerId) {
@@ -24,9 +32,17 @@ public class BeerControllerV2 {
 
     @PostMapping
     public ResponseEntity handlePost(@Valid @RequestBody BeerDtoV2 beerDto) {
-        BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
+        log.debug("ins handle post ...");
 
-        HttpHeaders headers = new HttpHeaders();
+
+        // val is the same as var, except that it should make the variable as final
+        val savedDto = beerService.saveNewBeer(beerDto);
+//        BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
+
+        // we can use project lombok's val when we don't know the type we!
+        var headers = new HttpHeaders();
+//        HttpHeaders headers = new HttpHeaders();
+
         headers.add("Location","/api/v1/beer/" + savedDto.getId().toString());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
