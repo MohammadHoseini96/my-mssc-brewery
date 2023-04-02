@@ -1,5 +1,6 @@
 package kian.springframework.mymsscbrewery.services.v2;
 
+import kian.springframework.mymsscbrewery.web.model.enums.BeerStyleEnum;
 import kian.springframework.mymsscbrewery.web.model.v2.BeerDtoV2;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class BeerServiceV2Impl implements BeerServiceV2 {
         return BeerDtoV2.builder()
                 .id(UUID.randomUUID())
                 .beerName("Galaxy Cet V2")
-                .beerStyle("Pale Ale V2")
+                .beerStyle(BeerStyleEnum.ALE)
                 .build();
     }
 
